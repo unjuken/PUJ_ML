@@ -1,0 +1,20 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "C/C++: clang++ build factory",
+            "command": "make factory",
+            "options": {
+                "cwd": "${workspaceFolder}/examples/neural_network"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ],
+    "version": "2.0.0"
+}

@@ -5,3 +5,5 @@ examples/logistic_regression/synthetic_data/*.csv
 *.ppm
 .idea
 test
+factory
+info.plist

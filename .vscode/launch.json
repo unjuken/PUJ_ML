@@ -102,6 +102,22 @@
                 "1E-7",
                 "0"
             ]
+        },
+        {
+            "name": "ANN Factory Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/examples/neural_network/factory",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/examples/neural_network",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "logging": {
+                "moduleLoad": false
+             },
+             "preLaunchTask": "C/C++: clang++ build factory"
         }
     ]
 }
