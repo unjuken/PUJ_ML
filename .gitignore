@@ -1,3 +1,7 @@
 build*
 *.o
 __pycache__
+examples/logistic_regression/synthetic_data/*.csv
+*.ppm
+.idea
+test

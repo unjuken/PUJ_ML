@@ -1,0 +1,107 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Train Linear Regression",
+            "type": "python",
+            "request": "launch",
+            "program": "examples/linear_regression/train_regression.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/Users/aramirez/Documents/ML/PUJ_ML/examples/linear_regression/synthetic_data/data_00.csv",
+                "ones",
+                "6", 
+                "decorrelate", 
+                "0.0000005", 
+                "0.00001"
+            ]
+        },
+        {
+            "name": "Python: Train Perceptron - simple data",
+            "type": "python",
+            "request": "launch",
+            "program": "examples/logistic_regression/train_perceptron.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/Users/aramirez/Documents/ML/PUJ_ML/examples/logistic_regression/synthetic_data/simple_data.csv",
+                "data.ppm",
+                "1E-10",
+                "1E-2",
+                "1"
+            ]
+        },
+        {
+            "name": "Python: Train Perceptron - data - 01",
+            "type": "python",
+            "request": "launch",
+            "program": "examples/logistic_regression/train_perceptron.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/Users/aramirez/Documents/ML/PUJ_ML/examples/logistic_regression/synthetic_data/data_01.csv",
+                "data_01.ppm",
+                "1E-10",
+                "1E-6",
+                "100"
+            ]
+        },
+        {
+            "name": "Python: Train Perceptron - data - 02",
+            "type": "python",
+            "request": "launch",
+            "program": "examples/logistic_regression/train_perceptron.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/Users/aramirez/Documents/ML/PUJ_ML/examples/logistic_regression/synthetic_data/data_02.csv",
+                "data_02.ppm",
+                "1E-10",
+                "1E-8",
+                "0"
+            ]
+        },
+        {
+            "name": "Python: Train Perceptron - data - 03",
+            "type": "python",
+            "request": "launch",
+            "program": "examples/logistic_regression/train_perceptron.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/Users/aramirez/Documents/ML/PUJ_ML/examples/logistic_regression/synthetic_data/data_03.csv",
+                "data_03.ppm",
+                "1E-10",
+                "1E-3",
+                "1"
+            ]
+            // w = [[0.05167989 0.04050824]]
+            // b = -4.276851406050858
+            // J = 0.3572314218396258
+            // Iterations = 238769
+            // --------------------
+            // Confussion matrix:
+            //  [[ 91.   0.]
+            //  [  9. 100.]]
+            // Sensitivity : 91.00%
+            // Specificity : 100.00%
+            // Precision   : 100.00%
+            // Accuracy    : 95.50%
+            // F1 score    : 95.29%
+            // --------------------
+        },
+        {
+            "name": "Python: Train Perceptron - data - 10",
+            "type": "python",
+            "request": "launch",
+            "program": "examples/logistic_regression/train_perceptron.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/Users/aramirez/Documents/ML/PUJ_ML/examples/logistic_regression/synthetic_data/data_10.csv",
+                "data_02.ppm",
+                "1E-10",
+                "1E-7",
+                "0"
+            ]
+        }
+    ]
+}
