@@ -7,3 +7,4 @@ examples/logistic_regression/synthetic_data/*.csv
 test
 factory
 info.plist
+binary_classifier

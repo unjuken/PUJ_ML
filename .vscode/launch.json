@@ -119,5 +119,11 @@
              },
              "preLaunchTask": "C/C++: clang++ build factory"
         }
+
+        //Generar CSV los ultimos dos datos son porcentajes en el conjunto de salida en porcentaje del total inicial.
+        //python3 ConvertPGMToCSVDataFile.py ./pgm/circle.pgm csv/circle.csv 0 1 1 0 0 0 0.5 0.4 
+
+        //Partir aleatoriamente un CSV en 3 datasets - 60/25/15
+        //./split.sh csv/circle.csv 60 25
     ]
 }
