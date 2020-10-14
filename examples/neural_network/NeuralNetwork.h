@@ -50,7 +50,8 @@ public:
     const TMatrix& X, const TMatrix& Y,
     const TScalar& alpha,
     const TScalar& lambda = TScalar( 0 ),
-    std::ostream* os = nullptr
+    std::ostream* os = nullptr,
+    TScalar epsilon = 1e-6
     );
   TMatrix confusion_matrix( const TMatrix& X, const TMatrix& Y ) const;
 

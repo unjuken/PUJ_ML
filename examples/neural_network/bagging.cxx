@@ -26,22 +26,27 @@ void read_files(
 int main( int argc, char** argv )
 {
   // Check inputs and get them
-  if( argc < 3 )
+  if( argc < 7 ) 
   {
     std::cerr
-      << "Usage: " << argv[ 0 ] << " input_features.bin input_values.bin"
+      << "Usage: " << argv[ 0 ] << " input_features.bin input_values.bin epsilon Q alpha lambda"
       << std::endl;
     return( 1 );
   } // end if
   std::string input_features = argv[ 1 ];
   std::string input_values = argv[ 2 ];
 
+  std::stringstream args;
+  args << argv[ 3 ] << " " << argv[ 4 ] << " " << argv[ 5 ] << " " << argv[ 6 ];
+  std::istringstream iargs( args.str( ) );
+
   // Bagging properties
   unsigned long gender_values = 1;
   unsigned long ethnicity_values = 6;
-  unsigned int Q = 4;
-  TScalar alpha = 1e-2;
-  TScalar lambda = 0;
+  unsigned int Q;
+  TScalar alpha, lambda, epsilon;
+
+  iargs >> epsilon >> Q >> alpha >> lambda;
 
   // Read data
   TAnn::TMatrix X, Y;
@@ -106,6 +111,19 @@ int main( int argc, char** argv )
     } // end if
   } // end for
 
+    // Normalization
+    TAnn::TRowVector min_D = Xtrain.colwise( ).minCoeff( );
+    TAnn::TRowVector max_D = Xtrain.colwise( ).maxCoeff( );
+    TAnn::TRowVector dif_D = max_D - min_D;
+    Xtrain.rowwise( ) -= min_D;
+    Xtrain.array( ).rowwise( ) /= dif_D.array( );
+
+    Xtest.rowwise( ) -= min_D;
+    Xtest.array( ).rowwise( ) /= dif_D.array( );
+
+    Xvalidation.rowwise( ) -= min_D;
+    Xvalidation.array( ).rowwise( ) /= dif_D.array( );
+
   // Show some info
   std::cout
     << "---------------------------" << std::endl
@@ -119,7 +137,7 @@ int main( int argc, char** argv )
     << "---------------------------" << std::endl;
 
   // Prepare bagging models
-  std::vector< TAnn > models( Q, TAnn( 1e-6 ) );
+  std::vector< TAnn > models( Q, TAnn( 1e-2 ) );
   unsigned int Mtrain = Xtrain.rows( );
   for( unsigned int q = 0; q < Q; ++q )
   {
@@ -145,9 +163,18 @@ int main( int argc, char** argv )
        models[ q ].add( Ybagg.cols( ), af_out );
     */
 
+
+    models[ q ].add( Xbagg.cols( ), 64, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( 32, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( 16, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( 8, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( 4, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( 2, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( 1, ActivationFunctions::Logistic<TScalar>( ) );
+
     // Train neural network
     models[ q ].init( true );
-    models[ q ].train( Xbagg, Ybagg, alpha, lambda, &std::cout );
+    models[ q ].train( Xbagg, Ybagg, alpha, lambda, &std::cout, epsilon); 
   } // end for
 
   // Test bagging

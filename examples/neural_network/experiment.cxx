@@ -64,7 +64,7 @@ int main( int argc, char** argv )
   ann.train( X_train, Y_train, alpha, lambda, &std::cout );
 
   // Evaluate trained results
-  TAnn::TMatrix K_train = ann.confusion_matrix( X_train, Y_train );
+  TAnn::TMatrix K_train = ann.confusion_matrix( X_train, Y_train ); 
   std::cout
     << "****************************" << std::endl
     << "***** Training results *****" << std::endl

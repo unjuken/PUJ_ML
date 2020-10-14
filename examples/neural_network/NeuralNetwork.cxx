@@ -114,9 +114,10 @@ void NeuralNetwork< _TScalar >::
 train(
   const TMatrix& X, const TMatrix& Y,
   const TScalar& alpha, const TScalar& lambda,
-  std::ostream* os
+  std::ostream* os, TScalar epsilon
   )
 {
+  this->m_Epsilon = epsilon; 
   // Initialize temporary values
   unsigned long L = this->m_L.size( );
   std::vector< TMatrix > dw( L );
@@ -131,7 +132,7 @@ train(
   TScalar J = this->_cost_and_gradient( dw, db, a, z, d, X, Y );
   if( lambda != TScalar( 0 ) )
     for( unsigned long l = 0; l < L; ++l )
-      J += this->m_L[ l ].regularization( ) * lambda;
+      J += this->m_L[ l ].regularization( ) * lambda; 
   TScalar dJ = J;
 
   // Main loop
