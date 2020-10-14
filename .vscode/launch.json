@@ -131,6 +131,26 @@
                 "moduleLoad": false
              },
              "preLaunchTask": "C/C++: clang++ build factory"
+        },
+
+        {
+            "name": "Bagging",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/examples/neural_network/bagging",
+            "args": [
+                "X_features.bin", 
+                "Y_gender.bin"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/examples/neural_network",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "logging": {
+                "moduleLoad": false
+             },
+             "preLaunchTask": "C/C++: clang++ build factory"
         }
 
 
