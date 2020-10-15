@@ -2,6 +2,7 @@ build*
 *.o
 __pycache__
 examples/logistic_regression/synthetic_data/*.csv
+examples/neural_network/X_features.bin
 *.ppm
 .idea
 test
