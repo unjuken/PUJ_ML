@@ -160,7 +160,7 @@ train(
     dJ = J - Jn;
     if( dJ <= this->m_Epsilon )
       stop = true;
-    if( nIter % 100 == 0 && os != nullptr )
+    if( nIter % 1 == 0 && os != nullptr )
       *os
         << "\33[2K\rIteration: " << nIter
         << "\tJ = " << J

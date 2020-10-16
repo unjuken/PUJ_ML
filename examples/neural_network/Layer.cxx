@@ -140,7 +140,7 @@ init( bool randomly )
   {
     std::random_device rd;
     std::mt19937 gen( rd( ) );
-    std::uniform_real_distribution< TScalar > dis( -1, 1 );
+    std::uniform_real_distribution< TScalar > dis( 0.0001, 0.1 );
 
     this->m_W = TMatrix::Zero( r, c ).unaryExpr(
       [&]( TScalar not_used ) { return( dis( gen ) ); }

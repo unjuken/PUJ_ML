@@ -140,7 +140,11 @@
             "program": "${workspaceFolder}/examples/neural_network/bagging",
             "args": [
                 "X_features.bin", 
-                "Y_gender.bin"
+                "Y_gender.bin",
+                "1e-6",
+                "1",
+                "1e-20",
+                "0"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/examples/neural_network",

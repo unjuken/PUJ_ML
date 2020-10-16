@@ -164,13 +164,13 @@ int main( int argc, char** argv )
     */
 
 
-    models[ q ].add( Xbagg.cols( ), 64, ActivationFunctions::ReLU<TScalar>( ) );
-    models[ q ].add( 32, ActivationFunctions::ReLU<TScalar>( ) );
-    models[ q ].add( 16, ActivationFunctions::ReLU<TScalar>( ) );
-    models[ q ].add( 8, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( Xbagg.cols( ), 8, ActivationFunctions::ReLU<TScalar>( ) );
+    /*models[ q ].add( 32, ActivationFunctions::Logistic<TScalar>( ) );
+    models[ q ].add( 16, ActivationFunctions::Logistic<TScalar>( ) );
+    models[ q ].add( 8, ActivationFunctions::Logistic<TScalar>( ) );*/
     models[ q ].add( 4, ActivationFunctions::ReLU<TScalar>( ) );
     models[ q ].add( 2, ActivationFunctions::ReLU<TScalar>( ) );
-    models[ q ].add( 1, ActivationFunctions::Logistic<TScalar>( ) );
+    models[ q ].add( 1, ActivationFunctions::ReLU<TScalar>( ) );
 
     // Train neural network
     models[ q ].init( true );

@@ -8,3 +8,10 @@ test
 factory
 info.plist
 binary_classifier
+examples/neural_network/bagging
+examples/neural_network/experiment
+examples/neural_network/X_features.bin
+examples/neural_network/Y_ethnicity.bin
+examples/neural_network/Y_gender.bin
+examples/neural_network/bagging.dSYM/Contents/Resources/DWARF/bagging
+examples/neural_network/experiment.dSYM/Contents/Resources/DWARF/experiment
