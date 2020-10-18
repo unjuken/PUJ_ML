@@ -29,24 +29,37 @@ int main( int argc, char** argv )
   if( argc < 7 ) 
   {
     std::cerr
-      << "Usage: " << argv[ 0 ] << " input_features.bin input_values.bin epsilon Q alpha lambda"
+      << "Usage: " << argv[ 0 ] << " input_features.bin input_values.bin epsilon Q alpha lambda [randomA] [randomB]"
       << std::endl;
     return( 1 );
   } // end if
+    // Bagging properties
+  unsigned long gender_values = 1;
+  unsigned long ethnicity_values = 6;
+  unsigned int Q;
+  TScalar alpha, lambda, epsilon, randomA = -1, randomB = 1;
+
+
+
+
   std::string input_features = argv[ 1 ];
   std::string input_values = argv[ 2 ];
 
   std::stringstream args;
   args << argv[ 3 ] << " " << argv[ 4 ] << " " << argv[ 5 ] << " " << argv[ 6 ];
   std::istringstream iargs( args.str( ) );
-
-  // Bagging properties
-  unsigned long gender_values = 1;
-  unsigned long ethnicity_values = 6;
-  unsigned int Q;
-  TScalar alpha, lambda, epsilon;
-
   iargs >> epsilon >> Q >> alpha >> lambda;
+
+
+  if ( argc == 9 )
+  {
+    std::stringstream args2;
+    args2 << argv[ 7 ] << " " << argv[ 8 ];
+    std::istringstream iargs2( args2.str( ) );
+    iargs2 >> randomA >> randomB;
+  }
+
+
 
   // Read data
   TAnn::TMatrix X, Y;
@@ -167,13 +180,13 @@ int main( int argc, char** argv )
     models[ q ].add( Xbagg.cols( ), 8, ActivationFunctions::ReLU<TScalar>( ) );
     /*models[ q ].add( 32, ActivationFunctions::Logistic<TScalar>( ) );
     models[ q ].add( 16, ActivationFunctions::Logistic<TScalar>( ) );
-    models[ q ].add( 8, ActivationFunctions::Logistic<TScalar>( ) );*/
+    models[ q ].add( 8, ActivationFunctions::Logistic<TScalar>( ) );
     models[ q ].add( 4, ActivationFunctions::ReLU<TScalar>( ) );
-    models[ q ].add( 2, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( 2, ActivationFunctions::ReLU<TScalar>( ) );*/
     models[ q ].add( 1, ActivationFunctions::ReLU<TScalar>( ) );
 
     // Train neural network
-    models[ q ].init( true );
+    models[ q ].init( true, randomA, randomB );
     models[ q ].train( Xbagg, Ybagg, alpha, lambda, &std::cout, epsilon); 
   } // end for
 
@@ -182,8 +195,11 @@ int main( int argc, char** argv )
   TScalar out_thr = 0.5;
   TAnn::TMatrix Yvote = TAnn::TMatrix::Zero( Ytrain.rows( ), P );
   for( unsigned int q = 0; q < Q; ++q )
+  {
+    auto train = models[ q ]( Xtrain.transpose() ).array( );
     Yvote.array( ) +=
-      ( models[ q ]( Xtrain ).array( ) >= out_thr ).template cast< TScalar >( );
+      ( train.transpose() >= out_thr ).template cast< TScalar >( );
+  }
   TAnn::TMatrix Yfinal( Ytrain.rows( ), P );
   Yfinal.array( ) = ( Yvote.array( ) > hQ ).template cast< TScalar >( );
 

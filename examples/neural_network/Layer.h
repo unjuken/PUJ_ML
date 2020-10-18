@@ -39,7 +39,7 @@ public:
   TActivation& sigma( );
   const TActivation& sigma( ) const;
 
-  void init( bool randomly = true );
+  void init( bool randomly = true, TScalar a = -1, TScalar b = 1 );
 
   TColVector linear_fwd( const TColVector& x ) const;
   TColVector sigma_fwd( const TColVector& z ) const;

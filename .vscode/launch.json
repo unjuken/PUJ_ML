@@ -141,10 +141,12 @@
             "args": [
                 "X_features.bin", 
                 "Y_gender.bin",
-                "1e-6",
-                "1",
-                "1e-20",
-                "0"
+                "1",//"1e-4", //epsilon
+                "1", // Q
+                "0", // alpha
+                "0",  // lambda
+                "1e-4", //randomA
+                "1e-2" //randomB
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/examples/neural_network",

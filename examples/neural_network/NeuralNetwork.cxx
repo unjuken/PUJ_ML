@@ -73,10 +73,10 @@ add( const TLayer& l )
 // -------------------------------------------------------------------------
 template< class _TScalar >
 void NeuralNetwork< _TScalar >::
-init( bool randomly )
+init( bool randomly, TScalar a, TScalar b )
 {
   for( TLayer& l: this->m_L )
-    l.init( randomly );
+    l.init( randomly, a, b);
 }
 
 // -------------------------------------------------------------------------

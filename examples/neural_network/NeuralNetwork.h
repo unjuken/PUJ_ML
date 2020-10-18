@@ -40,7 +40,7 @@ public:
   void add( const TMatrix& w, const TColVector& b, const TActivation& f );
   void add( const TLayer& l );
 
-  void init( bool randomly = true );
+  void init( bool randomly = true, TScalar a = -1, TScalar b = 1 );
 
   TMatrix operator()( const TMatrix& x ) const;
 

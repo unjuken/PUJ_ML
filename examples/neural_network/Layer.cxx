@@ -132,7 +132,7 @@ sigma( ) const
 // -------------------------------------------------------------------------
 template< class _TScalar >
 void Layer< _TScalar >::
-init( bool randomly )
+init( bool randomly, TScalar a, TScalar b )
 {
   unsigned int r = this->m_W.rows( );
   unsigned int c = this->m_W.cols( );
@@ -140,7 +140,7 @@ init( bool randomly )
   {
     std::random_device rd;
     std::mt19937 gen( rd( ) );
-    std::uniform_real_distribution< TScalar > dis( 0.0001, 0.1 );
+    std::uniform_real_distribution< TScalar > dis( a, b );
 
     this->m_W = TMatrix::Zero( r, c ).unaryExpr(
       [&]( TScalar not_used ) { return( dis( gen ) ); }
