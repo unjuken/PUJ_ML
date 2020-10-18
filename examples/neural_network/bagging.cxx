@@ -22,6 +22,20 @@ void read_files(
   const std::string& features, const std::string& values
   );
 
+TAnn::TMatrix bagging_confusion_matrix( 
+  const TAnn::TMatrix& Ytrain, 
+  const TAnn::TMatrix& Yfinal );
+
+TAnn::TMatrix bagging(
+  std::vector< TAnn > models, 
+  TAnn::TMatrix X, 
+  const int Q, 
+  unsigned int P);
+
+void print_K_train(TAnn::TMatrix K_train,
+std::string stage);
+
+
 // -- Main function
 int main( int argc, char** argv )
 {
@@ -191,9 +205,9 @@ int main( int argc, char** argv )
   } // end for
 
   // Test bagging
-  unsigned int hQ = Q >> 1; // == Q / 2
+  /*unsigned int hQ = Q >> 1; // == Q / 2
   TScalar out_thr = 0.5;
-  TAnn::TMatrix Yvote = TAnn::TMatrix::Zero( Ytrain.rows( ), P );
+  TAnn::TMatrix Yvote = TAnn::TMatrix::Zero(Ytrain.rows( ), P );
   for( unsigned int q = 0; q < Q; ++q )
   {
     auto train = models[ q ]( Xtrain.transpose() ).array( );
@@ -201,11 +215,19 @@ int main( int argc, char** argv )
       ( train.transpose() >= out_thr ).template cast< TScalar >( );
   }
   TAnn::TMatrix Yfinal( Ytrain.rows( ), P );
-  Yfinal.array( ) = ( Yvote.array( ) > hQ ).template cast< TScalar >( );
+  Yfinal.array( ) = ( Yvote.array( ) > hQ ).template cast< TScalar >( );*/
 
-  // TODO: Compute F1 score from Yfinal and Ytrain
+  TAnn::TMatrix Yfinal = bagging(models, Xtrain, Q, P);
 
-  // TODO: Validate bagging
+  //Compute F1 score from Yfinal and Ytrain
+  TAnn::TMatrix K_train = bagging_confusion_matrix( Ytrain, Yfinal ); 
+  print_K_train(K_train, "Training");
+
+  // Validate bagging
+
+  TAnn::TMatrix YFinalValidation = bagging(models, Xvalidation, Q, P);
+  TAnn::TMatrix K_trainValidation = bagging_confusion_matrix( Yvalidation, YFinalValidation ); 
+  print_K_train(K_trainValidation, "Validation");
 
   return( 0 );
 }
@@ -233,5 +255,62 @@ void read_files(
   Yreader.read( ( char* )( Y.data( ) ), sizeof( TScalar ) * yrows * ycols );
   Yreader.close( );
 }
+
+
+TAnn::TMatrix bagging_confusion_matrix( const TAnn::TMatrix& Ytrain, const TAnn::TMatrix& Yfinal ) 
+{
+  TAnn::TMatrix K = TAnn::TMatrix::Zero( 2, 2 );
+  auto RpY = Ytrain.array( ) + Yfinal.array( );
+  auto RmY = Ytrain.array( ) - Yfinal.array( );
+  K( 0, 0 ) = ( RpY == 0 ).template cast< TScalar >( ).sum( );
+  K( 1, 1 ) = ( RpY == 2 ).template cast< TScalar >( ).sum( );
+  K( 0, 1 ) = ( RmY < 0 ).template cast< TScalar >( ).sum( );
+  K( 1, 0 ) = ( RmY > 0 ).template cast< TScalar >( ).sum( );
+  return( K );
+}
+
+TAnn::TMatrix bagging(std::vector< TAnn > models, TAnn::TMatrix X, const int Q, unsigned int P)
+{
+  unsigned int hQ = Q >> 1; // == Q / 2
+  TScalar out_thr = 0.5;
+  TAnn::TMatrix Yvote = TAnn::TMatrix::Zero(X.rows( ), P );
+  for( unsigned int q = 0; q < Q; ++q )
+  {
+    auto train = models[ q ]( X.transpose() ).array( );
+    Yvote.array( ) +=
+      ( train.transpose() >= out_thr ).template cast< TScalar >( );
+  }
+  TAnn::TMatrix Yfinal( X.rows( ), P );
+  Yfinal.array( ) = ( Yvote.array( ) > hQ ).template cast< TScalar >( );
+  return Yfinal;
+}
+
+void print_K_train(TAnn::TMatrix K_train, std::string stage)
+{
+    std::cout
+    << "****************************" << std::endl
+    << "***** " << stage << " results *****" << std::endl
+    << "****************************" << std::endl
+    << "* Confusion matrix:" << std::endl << K_train << std::endl
+    << std::setprecision( 4 )
+    << "* Sen (0) : "
+    << ( 100.0 * ( K_train( 0, 0 ) / ( K_train( 0, 0 ) + K_train( 1, 0 ) ) ) )
+    << "%" << std::endl
+    << "* PPV (0) : "
+    << ( 100.0 * ( K_train( 0, 0 ) / ( K_train( 0, 0 ) + K_train( 0, 1 ) ) ) )
+    << "%" << std::endl
+    << "* Spe (1) : "
+    << ( 100.0 * ( K_train( 1, 1 ) / ( K_train( 1, 1 ) + K_train( 0, 1 ) ) ) )
+    << "%" << std::endl
+    << "* NPV (1) : "
+    << ( 100.0 * ( K_train( 1, 1 ) / ( K_train( 1, 1 ) + K_train( 1, 0 ) ) ) )
+    << "%" << std::endl
+    << "* F1      : "
+    << ( ( 2.0 * K_train( 0, 0 ) ) / ( ( 2.0 * K_train( 0, 0 ) ) + K_train( 0, 1 ) + K_train( 1, 0 ) ) )
+    << std::endl
+    << "*******************" << std::endl;
+}
+
+
 
 // eof - bagging.cxx
