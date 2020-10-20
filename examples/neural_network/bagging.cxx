@@ -139,7 +139,7 @@ int main( int argc, char** argv )
   } // end for
 
     // Normalization
-    TAnn::TRowVector min_D = Xtrain.colwise( ).minCoeff( );
+    /*TAnn::TRowVector min_D = Xtrain.colwise( ).minCoeff( );
     TAnn::TRowVector max_D = Xtrain.colwise( ).maxCoeff( );
     TAnn::TRowVector dif_D = max_D - min_D;
     Xtrain.rowwise( ) -= min_D;
@@ -149,7 +149,7 @@ int main( int argc, char** argv )
     Xtest.array( ).rowwise( ) /= dif_D.array( );
 
     Xvalidation.rowwise( ) -= min_D;
-    Xvalidation.array( ).rowwise( ) /= dif_D.array( );
+    Xvalidation.array( ).rowwise( ) /= dif_D.array( );*/
 
   // Show some info
   std::cout
@@ -182,40 +182,14 @@ int main( int argc, char** argv )
       Ybagg.row( i ) = Ytrain.row( indexes( i, 0 ) );
     } // end for
 
-    // Create neural network
-    /* TODO
-       models[ q ].add( Xbagg.cols( ), k1, af_1 );
-       models[ q ].add( k2, af_2 );
-       ...
-       models[ q ].add( Ybagg.cols( ), af_out );
-    */
-
-
-    models[ q ].add( Xbagg.cols( ), 8, ActivationFunctions::ReLU<TScalar>( ) );
-    /*models[ q ].add( 32, ActivationFunctions::Logistic<TScalar>( ) );
-    models[ q ].add( 16, ActivationFunctions::Logistic<TScalar>( ) );
-    models[ q ].add( 8, ActivationFunctions::Logistic<TScalar>( ) );
-    models[ q ].add( 4, ActivationFunctions::ReLU<TScalar>( ) );
-    models[ q ].add( 2, ActivationFunctions::ReLU<TScalar>( ) );*/
-    models[ q ].add( 1, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( Xbagg.cols( ), Xbagg.cols( )/9, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( Xbagg.cols( )/4, ActivationFunctions::ReLU<TScalar>( ) );
+    models[ q ].add( 1, ActivationFunctions::Logistic<TScalar>( ) );
 
     // Train neural network
     models[ q ].init( true, randomA, randomB );
     models[ q ].train( Xbagg, Ybagg, alpha, lambda, &std::cout, epsilon); 
   } // end for
-
-  // Test bagging
-  /*unsigned int hQ = Q >> 1; // == Q / 2
-  TScalar out_thr = 0.5;
-  TAnn::TMatrix Yvote = TAnn::TMatrix::Zero(Ytrain.rows( ), P );
-  for( unsigned int q = 0; q < Q; ++q )
-  {
-    auto train = models[ q ]( Xtrain.transpose() ).array( );
-    Yvote.array( ) +=
-      ( train.transpose() >= out_thr ).template cast< TScalar >( );
-  }
-  TAnn::TMatrix Yfinal( Ytrain.rows( ), P );
-  Yfinal.array( ) = ( Yvote.array( ) > hQ ).template cast< TScalar >( );*/
 
   TAnn::TMatrix Yfinal = bagging(models, Xtrain, Q, P);
 
@@ -223,11 +197,18 @@ int main( int argc, char** argv )
   TAnn::TMatrix K_train = bagging_confusion_matrix( Ytrain, Yfinal ); 
   print_K_train(K_train, "Training");
 
+  //Test bagging
+  TAnn::TMatrix YFinalTest = bagging(models, Xtest, Q, P);
+  TAnn::TMatrix K_trainTest = bagging_confusion_matrix( Ytest, YFinalTest ); 
+  print_K_train(K_trainTest, "Test");
+
   // Validate bagging
 
   TAnn::TMatrix YFinalValidation = bagging(models, Xvalidation, Q, P);
   TAnn::TMatrix K_trainValidation = bagging_confusion_matrix( Yvalidation, YFinalValidation ); 
   print_K_train(K_trainValidation, "Validation");
+
+  system("./done.sh");
 
   return( 0 );
 }

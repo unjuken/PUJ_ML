@@ -15,3 +15,4 @@ examples/neural_network/Y_ethnicity.bin
 examples/neural_network/Y_gender.bin
 examples/neural_network/bagging.dSYM/Contents/Resources/DWARF/bagging
 examples/neural_network/experiment.dSYM/Contents/Resources/DWARF/experiment
+examples/neural_network/notebook
